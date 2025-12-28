@@ -18,7 +18,7 @@ docker run --name datashare-db \
 
 ## Backend (Spring Boot)
 
-*Dossier : `back-ocdevops03-pilotez-solution-informatique/`*
+*Dossier : `ExpertDevOps-P3-DataShare-Backend/`*
 
 ### Lancer l'application
 ```bash
@@ -50,7 +50,7 @@ export DB_PASSWORD=root
 
 ## Frontend (Angular)
 
-*Dossier : `front-ocdevops03-pilotez-solution-informatique/`*
+*Dossier : `ExpertDevOps-P3-DataShare-Frontend/`*
 
 ### Installation & Lancement
 ```bash

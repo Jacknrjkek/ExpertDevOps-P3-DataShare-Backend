@@ -63,7 +63,7 @@ services:
       - db-data:/var/lib/postgresql/data
 
   backend:
-    build: ./back-ocdevops03-pilotez-solution-informatique
+    build: ./ExpertDevOps-P3-DataShare-Backend
     ports:
       - "8080:8080"
     environment:
@@ -75,7 +75,7 @@ services:
       - db
 
   frontend:
-    build: ./front-ocdevops03-pilotez-solution-informatique
+    build: ./ExpertDevOps-P3-DataShare-Frontend
     ports:
       - "4200:80"
 ```

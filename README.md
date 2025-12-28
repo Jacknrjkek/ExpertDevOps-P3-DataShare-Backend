@@ -2,6 +2,11 @@
 
 DataShare est une application web sécurisée de partage de fichiers, développée dans le cadre du projet "Pilotez une solution informatique" (OC DevOps). Elle permet aux utilisateurs de s'inscrire, de stocker des fichiers personnels et de les partager via des liens uniques.
 
+![Java](https://img.shields.io/badge/Java-21-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0.0-6DB33F?style=for-the-badge&logo=spring-boot&logoColor=white)
+![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+![Build Status](https://img.shields.io/badge/Build-Passing-brightgreen?style=for-the-badge)
+
 ---
 
 ## [Documentation des User Stories](US.md)
@@ -29,14 +34,14 @@ DataShare est une application web sécurisée de partage de fichiers, développ�
 
 Le projet est structuré en deux parties distinctes :
 
-### Backend (`/back-ocdevops03-pilotez-solution-informatique`)
+### Backend (`/ExpertDevOps-P3-DataShare-Backend`)
 *   **Langage** : Java 21
 *   **Framework** : Spring Boot 4
 *   **Base de données** : PostgreSQL
 *   **Sécurité** : Spring Security + JWT
 *   **Documentation API** : Code entièrement commenté (Javadoc)
 
-### Frontend (`/front-ocdevops03-pilotez-solution-informatique`)
+### Frontend (`/ExpertDevOps-P3-DataShare-Frontend`)
 *   **Langage** : TypeScript
 *   **Framework** : Angular 21 (Standalone Components)
 *   **Design** : SCSS modulaire
@@ -67,7 +72,7 @@ docker run --name datashare-db -e POSTGRES_PASSWORD=root -e POSTGRES_DB=datashar
 
 ### 2. Démarrer le Backend
 ```bash
-cd back-ocdevops03-pilotez-solution-informatique
+cd ExpertDevOps-P3-DataShare-Backend
 # Configuration des variables d'environnement (optionnel, valeurs par défaut dans application.yaml)
 export DB_USERNAME=postgres
 export DB_PASSWORD=root
@@ -78,7 +83,7 @@ L'API sera accessible sur `http://localhost:8080`.
 
 ### 3. Démarrer le Frontend
 ```bash
-cd front-ocdevops03-pilotez-solution-informatique
+cd ExpertDevOps-P3-DataShare-Frontend
 npm install
 npm start
 ```
