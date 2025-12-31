@@ -3,9 +3,13 @@ import time
 import concurrent.futures
 import statistics
 
+import os
+
 URL = "http://localhost:8080/api/auth/login"
 # Payload invalide mais suffisant pour tester la réaction du serveur (401 ou 400)
-PAYLOAD = {"email": "perf.test@test.com", "password": "wrongpassword"}
+email = os.getenv("PERF_TEST_EMAIL", "perf.test@test.com")
+password = os.getenv("PERF_TEST_PASSWORD", "wrongpassword")
+PAYLOAD = {"email": email, "password": password}
 NUM_REQUESTS = 50
 CONCURRENT_WORKERS = 10
 

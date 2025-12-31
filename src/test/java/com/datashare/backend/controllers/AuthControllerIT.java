@@ -56,6 +56,8 @@ public class AuthControllerIT {
 
     private ObjectMapper objectMapper = new ObjectMapper();
 
+    private static final String TEST_PASSWORD = "password123";
+
     @BeforeEach
     public void setup() {
         // Initialisation de MockMvc avec le contrôleur injecté
@@ -70,11 +72,11 @@ public class AuthControllerIT {
     public void testRegisterUser_Success() throws Exception {
         SignupRequest signupRequest = new SignupRequest();
         signupRequest.setEmail("newuser@test.com");
-        signupRequest.setPassword("password123");
+        signupRequest.setPassword(TEST_PASSWORD);
 
         // Simulation des dépendances
         when(userRepository.existsByEmail("newuser@test.com")).thenReturn(false);
-        when(encoder.encode("password123")).thenReturn("encodedPassword");
+        when(encoder.encode(TEST_PASSWORD)).thenReturn("encodedPassword");
         when(userRepository.save(any(AppUser.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         // Exécution de la requête POST et vérification
@@ -93,7 +95,7 @@ public class AuthControllerIT {
     public void testLoginUser_Success() throws Exception {
         LoginRequest loginRequest = new LoginRequest();
         loginRequest.setEmail("test@test.com");
-        loginRequest.setPassword("password");
+        loginRequest.setPassword(TEST_PASSWORD);
 
         // Mock Authentication
         Authentication authentication = mock(Authentication.class);
