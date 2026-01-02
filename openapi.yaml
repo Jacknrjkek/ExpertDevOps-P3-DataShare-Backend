@@ -1,0 +1,384 @@
+openapi: 3.0.3
+info:
+  title: DataShare API
+  description: API for the DataShare secure file sharing application.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Local Development Server
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          example: user@example.com
+        password:
+          type: string
+          format: password
+          example: password123
+
+    SignupRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          minLength: 6
+
+    JwtResponse:
+      type: object
+      properties:
+        token:
+          type: string
+        id:
+          type: integer
+          format: int64
+        email:
+          type: string
+
+    MessageResponse:
+      type: object
+      properties:
+        message:
+          type: string
+
+    FileResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        name:
+          type: string
+        size:
+          type: integer
+          format: int64
+        createdAt:
+          type: string
+          format: date-time
+        expirationDate:
+          type: string
+          format: date-time
+        shareToken:
+          type: string
+        downloadCount:
+          type: integer
+        tags:
+          type: array
+          items:
+            type: string
+
+    UploadResponse:
+      type: object
+      properties:
+        fileId:
+          type: integer
+          format: int64
+        shareToken:
+          type: string
+        message:
+          type: string
+
+    ShareMetadata:
+      type: object
+      properties:
+        fileName:
+          type: string
+        size:
+          type: integer
+          format: int64
+        expiration:
+          type: string
+          format: date-time
+          nullable: true
+        isProtected:
+          type: boolean
+
+security:
+  - bearerAuth: []
+
+paths:
+  /api/auth/register:
+    post:
+      summary: Register a new user
+      tags: [Auth]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SignupRequest'
+      responses:
+        '201':
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '400':
+          description: Email already in use
+
+  /api/auth/login:
+    post:
+      summary: Authenticate user and get JWT
+      tags: [Auth]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Successfully authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JwtResponse'
+        '401':
+          description: Bad credentials
+
+  /api/files:
+    get:
+      summary: List user files
+      tags: [Files]
+      responses:
+        '200':
+          description: List of user files
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FileResponse'
+
+  /api/files/upload:
+    post:
+      summary: Upload a file (Authenticated)
+      tags: [Files]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                expirationTime:
+                  type: integer
+                  description: Expiration in days (1-7)
+                password:
+                  type: string
+                  description: Optional password protection
+      responses:
+        '201':
+          description: File uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadResponse'
+        '400':
+          description: Invalid input or forbidden extension
+
+  /api/files/upload/anonymous:
+    post:
+      summary: Upload a file (Anonymous)
+      tags: [Files]
+      security: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                expirationTime:
+                  type: integer
+                  description: Expiration in days (1-7)
+                password:
+                  type: string
+      responses:
+        '201':
+          description: File uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadResponse'
+
+  /api/files/{id}:
+    delete:
+      summary: Delete a file
+      tags: [Files]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: File deleted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+        '403':
+          description: Not owner
+        '404':
+          description: File not found
+
+  /api/files/{id}/tags:
+    post:
+      summary: Add a tag to a file
+      tags: [Files]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tag:
+                  type: string
+      responses:
+        '200':
+          description: Tag added
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+
+  /api/files/{id}/tags/{tag}:
+    delete:
+      summary: Remove a tag from a file
+      tags: [Files]
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: tag
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Tag removed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageResponse'
+
+  /api/share/{token}:
+    get:
+      summary: Get shared file metadata
+      tags: [Share]
+      security: []
+      parameters:
+        - in: path
+          name: token
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: File metadata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShareMetadata'
+        '404':
+          description: Token not found
+        '410':
+          description: Link expired
+
+  /api/download/{token}:
+    get:
+      summary: Download shared file (Non-protected)
+      tags: [Share]
+      security: []
+      parameters:
+        - in: path
+          name: token
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: File binary stream
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '403':
+          description: File is password protected (Use POST)
+        '410':
+          description: Link expired
+    post:
+      summary: Download protected shared file
+      tags: [Share]
+      security: []
+      parameters:
+        - in: path
+          name: token
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                password:
+                  type: string
+      responses:
+        '200':
+          description: File binary stream
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '403':
+          description: Incorrect password
