@@ -9,24 +9,24 @@ DataShare est une application web sécurisée de partage de fichiers, développ�
 
 ---
 
-## [Documentation des User Stories](US.md)
+## [Documentation des User Stories](docs/US.md)
 
-![Dashboard DataShare](screenshots/dashboard.png)
+![Dashboard DataShare](docs/screenshots/dashboard.png)
 *Tableau de bord de l'application DataShare*
 
 ## Documentation Technique
-*   **[Documentation Base de Données (MLD)](./DATABASE.md)** : Schéma relationnel et description des tables.
-*   **[Documentation API REST](./API.md)** : Liste des endpoints, méthodes et sécurité.
+*   **[Documentation Base de Données (MLD)](docs/DATABASE.md)** : Schéma relationnel et description des tables.
+*   **[Documentation API REST](./docs/API.md)** : Liste des endpoints, méthodes et sécurité.
 *   **[Documentation API (SwaggerHub)](https://app.swaggerhub.com/apis-docs/uha-d8f/DataShareAPI/1.0.0)** : Documentation interactive en ligne.
 
 
-*   **[Choix Techniques](./CHOIX_TECHNIQUES.md)** : Justification de la stack (Java/Angular), BDD et outils.
-*   **[Sécurité](./SECURITY.md)** : Rapport d'audit OWASP, implémentation JWT et bonnes pratiques.
-*   **[Stratégie de Tests](./TESTING.md)** : Détails des tests Unitaires, Intégration et E2E (Couverture, Outils).
-*   **[User Stories](./US.md)** : Liste des fonctionnalités et matrice de traçabilité (Tests/Code).
-*   **[Maintenance](./MAINTENANCE.md)** : Procédures de surveillance, backup et gestion des logs.
-*   **[Performance](./PERF.md)** : Audit de performance et plan de montée en charge.
-*   **[Commandes](./COMMANDES.md)** : Commandes utiles et mémo technique.
+*   **[Choix Techniques](docs/CHOIX_TECHNIQUES.md)** : Justification de la stack (Java/Angular), BDD et outils.
+*   **[Sécurité](docs/SECURITY.md)** : Rapport d'audit OWASP, implémentation JWT et bonnes pratiques.
+*   **[Stratégie de Tests](docs/TESTING.md)** : Détails des tests Unitaires, Intégration et E2E (Couverture, Outils).
+*   **[User Stories](docs/US.md)** : Liste des fonctionnalités et matrice de traçabilité (Tests/Code).
+*   **[Maintenance](docs/MAINTENANCE.md)** : Procédures de surveillance, backup et gestion des logs.
+*   **[Performance](docs/PERF.md)** : Audit de performance et plan de montée en charge.
+*   **[Commandes](docs/COMMANDES.md)** : Commandes utiles et mémo technique.
 *   **[Maquettes Figma](https://www.figma.com/design/XEinfkoE7mXktCCfMs3E8c/DataShare?node-id=0-1&p=f&t=7FcjTcbcCYzlWxON-0)** : Design System et maquettes UI de l'application.
 
 ---
@@ -34,7 +34,7 @@ DataShare est une application web sécurisée de partage de fichiers, développ�
 ## Architecture Technique
 
 ### Vue Globale
-![Architecture Technique](screenshots/architecture.png)
+![Architecture Technique](docs/screenshots/architecture.png)
 
 Le projet est structuré en deux parties distinctes :
 
@@ -52,7 +52,7 @@ Le projet est structuré en deux parties distinctes :
 *   **Tests** : Jest (Unitaires) & Cypress (E2E)
 
 ### Modèle de Données
-![Modèle Relationnel (MLD)](screenshots/mld.png)
+![Modèle Relationnel (MLD)](docs/screenshots/mld.png)
 
 
 
