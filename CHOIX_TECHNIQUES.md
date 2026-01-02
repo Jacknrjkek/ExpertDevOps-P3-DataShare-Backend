@@ -12,7 +12,7 @@ Ce document détaille l'architecture technique retenue pour le projet **DataShar
 | **Framework Frontend** | **Angular (v21)** | React, Vue.js | Structure "batteries-included", architecture modulaire stricte, idéal pour les applications d'entreprise. |
 | **Base de Données** | **PostgreSQL (SQL)** | MySQL, MongoDB (NoSQL) | Conformité ACID indispensable pour les données critiques, support JSON avancé, fiabilité éprouvée. |
 | **Authentification** | **JWT (Stateless)** | Sessions (Stateful), OAuth2 | Extensibilité (Mobile/Web), absence d'état serveur (scalabilité horizontale), standard sécurisé. |
-| **Stockage Fichiers** | **Système de Fichiers (Local)** | S3, Azure Blob Storage | Simplicité de mise en œuvre initiale. Abstraction via Service permettant une migration Cloud facile. |
+| **Stockage Fichiers** | **Système de Fichiers (Local)** | S3, Azure Blob Storage | Simplicité de mise en œuvre initiale. Supporte des uploads jusqu'à 1Go. Abstraction via Service permettant une migration Cloud facile. |
 
 ---
 

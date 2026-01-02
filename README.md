@@ -93,6 +93,6 @@ L'application sera accessible sur `http://localhost:4200`.
 
 ## Fonctionnalités
 *   **Authentification** : Inscription et Connexion sécurisée.
-*   **Gestion de fichiers** : Upload, Liste, Téléchargement, Suppression.
+*   **Gestion de fichiers** : Upload (jusqu'à 1 Go), Liste, Téléchargement, Suppression.
 *   **Partage** : Génération de lien public pour partage externe.
 *   **Sécurité** : Contrôle d'accès basé sur les rôles (RBAC) et validation des extensions de fichiers.
