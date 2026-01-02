@@ -54,10 +54,7 @@ Le projet est structuré en deux parties distinctes :
 ### Modèle de Données
 ![Modèle Relationnel (MLD)](screenshots/mld.png)
 
-### Endpoints Principaux
-![API Endpoints](screenshots/api_endpoints.png)
 
----
 
 ## Installation et Démarrage
 
