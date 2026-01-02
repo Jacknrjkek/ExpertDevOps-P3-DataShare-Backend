@@ -14,9 +14,10 @@ public class FileResponse {
     private LocalDateTime expirationDate;
     private String shareToken; // Token unique pour le lien de partage
     private Integer downloadCount;
+    private java.util.Set<String> tags;
 
     public FileResponse(Long id, String originalName, Long size, LocalDateTime uploadDate, LocalDateTime expirationDate,
-            String shareToken, Integer downloadCount) {
+            String shareToken, Integer downloadCount, java.util.Set<String> tags) {
         this.id = id;
         this.originalName = originalName;
         this.size = size;
@@ -24,6 +25,7 @@ public class FileResponse {
         this.expirationDate = expirationDate;
         this.shareToken = shareToken;
         this.downloadCount = downloadCount;
+        this.tags = tags;
     }
 
     // Getters and Setters
@@ -81,5 +83,13 @@ public class FileResponse {
 
     public void setDownloadCount(Integer downloadCount) {
         this.downloadCount = downloadCount;
+    }
+
+    public java.util.Set<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(java.util.Set<String> tags) {
+        this.tags = tags;
     }
 }

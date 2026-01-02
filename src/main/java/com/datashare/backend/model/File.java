@@ -34,15 +34,20 @@ public class File {
     @Column(name = "expiration_date")
     private LocalDateTime expirationDate;
 
-    // Relation Many-to-One : Un fichier appartient à un seul utilisateur
+    // Relation Many-to-One : Un fichier appartient à un seul utilisateur (ou null
+    // si anonyme)
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id")
+    @JoinColumn(name = "owner_id", nullable = true)
     private AppUser owner;
 
-    // Relation One-to-Many : Un fichier peut avoir plusieurs liens de partages (si
-    // étendu)
+    // Relation One-to-Many : Un fichier peut avoir plusieurs liens de partages
     @OneToMany(mappedBy = "file", cascade = CascadeType.ALL, orphanRemoval = true)
     private java.util.List<Share> shares = new java.util.ArrayList<>();
+
+    @ElementCollection
+    @CollectionTable(name = "file_tags", joinColumns = @JoinColumn(name = "file_id"))
+    @Column(name = "tag", length = 30)
+    private java.util.Set<String> tags = new java.util.HashSet<>();
 
     @PrePersist
     protected void onCreate() {
@@ -113,5 +118,13 @@ public class File {
 
     public void setShares(java.util.List<Share> shares) {
         this.shares = shares;
+    }
+
+    public java.util.Set<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(java.util.Set<String> tags) {
+        this.tags = tags;
     }
 }

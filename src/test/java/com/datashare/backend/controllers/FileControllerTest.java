@@ -81,6 +81,17 @@ public class FileControllerTest {
                 "text/plain",
                 "content".getBytes());
 
+        // Mock Security Context (Needed because uploadFile checks auth before
+        // extension)
+        lenient().when(securityContext.getAuthentication()).thenReturn(authentication);
+        lenient().when(authentication.getPrincipal()).thenReturn(userDetails);
+        lenient().when(userDetails.getUsername()).thenReturn("test@test.com");
+
+        AppUser mockUser = new AppUser();
+        mockUser.setId(1L);
+        mockUser.setEmail("test@test.com");
+        lenient().when(userRepository.findByEmail("test@test.com")).thenReturn(Optional.of(mockUser));
+
         ResponseEntity<?> response = fileController.uploadFile(file, null);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
@@ -123,7 +134,7 @@ public class FileControllerTest {
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         @SuppressWarnings("unchecked")
         Map<String, Object> body = (Map<String, Object>) response.getBody();
-        assertEquals("Fichier téléversé avec succès", body.get("message"));
+        assertEquals("Fichier téléversé avec succès (Authentifié)", body.get("message"));
     }
 
     /**
@@ -207,5 +218,84 @@ public class FileControllerTest {
         ResponseEntity<?> response = fileController.deleteFile(20L);
 
         assertEquals(HttpStatus.FORBIDDEN, response.getStatusCode());
+    }
+
+    /**
+     * Teste l'upload anonyme (US07).
+     */
+    @Test
+    public void testUploadFileAnonymous() throws Exception {
+        MockMultipartFile file = new MockMultipartFile(
+                "file",
+                "anonymous.txt",
+                "text/plain",
+                "content".getBytes());
+
+        when(fileStorageService.store(any(MultipartFile.class))).thenReturn("anon_path.txt");
+        when(fileRepository.save(any(File.class))).thenAnswer(i -> {
+            File f = i.getArgument(0);
+            f.setId(300L);
+            return f;
+        });
+
+        ResponseEntity<?> response = fileController.uploadFileAnonymous(file, 2);
+
+        assertEquals(HttpStatus.CREATED, response.getStatusCode());
+        @SuppressWarnings("unchecked")
+        Map<String, Object> body = (Map<String, Object>) response.getBody();
+        assertEquals("Fichier téléversé avec succès (Anonyme)", body.get("message"));
+    }
+
+    /**
+     * Teste l'ajout d'un tag (US08).
+     */
+    @Test
+    public void testAddTag_Success() {
+        AppUser mockUser = new AppUser();
+        mockUser.setId(1L);
+        mockUser.setEmail("test@test.com");
+
+        File file = new File();
+        file.setId(50L);
+        file.setOwner(mockUser);
+
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getPrincipal()).thenReturn(userDetails);
+        when(userDetails.getUsername()).thenReturn("test@test.com");
+        when(userRepository.findByEmail("test@test.com")).thenReturn(Optional.of(mockUser));
+        when(fileRepository.findById(50L)).thenReturn(Optional.of(file));
+
+        Map<String, String> payload = Map.of("tag", "Urgent");
+        ResponseEntity<?> response = fileController.addTag(50L, payload);
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(1, file.getTags().size());
+        assertEquals("Urgent", file.getTags().iterator().next());
+    }
+
+    /**
+     * Teste la suppression d'un tag (US08).
+     */
+    @Test
+    public void testRemoveTag_Success() {
+        AppUser mockUser = new AppUser();
+        mockUser.setId(1L);
+        mockUser.setEmail("test@test.com");
+
+        File file = new File();
+        file.setId(50L);
+        file.setOwner(mockUser);
+        file.getTags().add("ToReview");
+
+        when(securityContext.getAuthentication()).thenReturn(authentication);
+        when(authentication.getPrincipal()).thenReturn(userDetails);
+        when(userDetails.getUsername()).thenReturn("test@test.com");
+        when(userRepository.findByEmail("test@test.com")).thenReturn(Optional.of(mockUser));
+        when(fileRepository.findById(50L)).thenReturn(Optional.of(file));
+
+        ResponseEntity<?> response = fileController.removeTag(50L, "ToReview");
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(0, file.getTags().size());
     }
 }

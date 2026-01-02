@@ -1,0 +1,149 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ------------------< com.datashare:datashare-backend >-------------------
+[INFO] Building datashare-backend 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:4.0.0:run (default-cli) > test-compile @ datashare-backend >>>
+[INFO] 
+[INFO] --- jacoco:0.8.12:prepare-agent (default) @ datashare-backend ---
+[INFO] argLine set to -javaagent:/home/nicolas/.m2/repository/org/jacoco/org.jacoco.agent/0.8.12/org.jacoco.agent-0.8.12-runtime.jar=destfile=/home/nicolas/OC3/ExpertDevOps-P3-DataShare-Backend/target/jacoco.exec
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ datashare-backend ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.1:compile (default-compile) @ datashare-backend ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 24 source files with javac [debug parameters release 21] to target/classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ datashare-backend ---
+[INFO] Copying 1 resource from src/test/resources to target/test-classes
+[INFO] 
+[INFO] --- compiler:3.14.1:testCompile (default-testCompile) @ datashare-backend ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 8 source files with javac [debug parameters release 21] to target/test-classes
+[INFO] 
+[INFO] <<< spring-boot:4.0.0:run (default-cli) < test-compile @ datashare-backend <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:4.0.0:run (default-cli) @ datashare-backend ---
+[INFO] Attaching agents: []
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v4.0.0)
+
+2026-01-02T14:15:10.614+01:00  INFO 950181 --- [datashare-backend] [           main] c.d.backend.DatashareBackendApplication  : Starting DatashareBackendApplication using Java 21.0.9 with PID 950181 (/home/nicolas/OC3/ExpertDevOps-P3-DataShare-Backend/target/classes started by nicolas in /home/nicolas/OC3/ExpertDevOps-P3-DataShare-Backend)
+2026-01-02T14:15:10.616+01:00  INFO 950181 --- [datashare-backend] [           main] c.d.backend.DatashareBackendApplication  : No active profile set, falling back to 1 default profile: "default"
+2026-01-02T14:15:11.250+01:00  INFO 950181 --- [datashare-backend] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-01-02T14:15:11.299+01:00  INFO 950181 --- [datashare-backend] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 41 ms. Found 3 JPA repository interfaces.
+2026-01-02T14:15:11.756+01:00  INFO 950181 --- [datashare-backend] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat initialized with port 8080 (http)
+2026-01-02T14:15:11.767+01:00  INFO 950181 --- [datashare-backend] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-01-02T14:15:11.767+01:00  INFO 950181 --- [datashare-backend] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/11.0.14]
+2026-01-02T14:15:11.804+01:00  INFO 950181 --- [datashare-backend] [           main] b.w.c.s.WebApplicationContextInitializer : Root WebApplicationContext: initialization completed in 1142 ms
+2026-01-02T14:15:11.910+01:00  INFO 950181 --- [datashare-backend] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-01-02T14:15:11.946+01:00  INFO 950181 --- [datashare-backend] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 7.1.8.Final
+2026-01-02T14:15:12.252+01:00  INFO 950181 --- [datashare-backend] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-01-02T14:15:12.274+01:00  INFO 950181 --- [datashare-backend] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-01-02T14:15:12.394+01:00  INFO 950181 --- [datashare-backend] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@14239223
+2026-01-02T14:15:12.395+01:00  INFO 950181 --- [datashare-backend] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-01-02T14:15:12.418+01:00  WARN 950181 --- [datashare-backend] [           main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2026-01-02T14:15:12.433+01:00  INFO 950181 --- [datashare-backend] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [jdbc:postgresql://localhost:5432/datashare]
+	Database driver: PostgreSQL JDBC Driver
+	Database dialect: PostgreSQLDialect
+	Database version: 16.11
+	Default catalog/schema: datashare/public
+	Autocommit mode: undefined/unknown
+	Isolation level: READ_COMMITTED [default READ_COMMITTED]
+	JDBC fetch size: none
+	Pool: DatasourceConnectionProviderImpl
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-01-02T14:15:13.276+01:00  INFO 950181 --- [datashare-backend] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-01-02T14:15:13.372+01:00  INFO 950181 --- [datashare-backend] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-01-02T14:15:13.425+01:00  INFO 950181 --- [datashare-backend] [           main] o.s.d.j.r.query.QueryEnhancerFactories   : Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-01-02T14:15:13.638+01:00  INFO 950181 --- [datashare-backend] [           main] eAuthenticationProviderManagerConfigurer : Global AuthenticationManager configured with AuthenticationProvider bean with name authenticationProvider
+2026-01-02T14:15:13.639+01:00  WARN 950181 --- [datashare-backend] [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with an AuthenticationProvider bean. UserDetailsService beans will not be used by Spring Security for automatically configuring username/password login. Consider removing the AuthenticationProvider bean. Alternatively, consider using the UserDetailsService in a manually instantiated DaoAuthenticationProvider. If the current configuration is intentional, to turn off this warning, increase the logging level of 'org.springframework.security.config.annotation.authentication.configuration.InitializeUserDetailsBeanManagerConfigurer' to ERROR
+2026-01-02T14:15:13.788+01:00  WARN 950181 --- [datashare-backend] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2026-01-02T14:15:14.360+01:00  INFO 950181 --- [datashare-backend] [           main] o.s.boot.tomcat.TomcatWebServer          : Tomcat started on port 8080 (http) with context path '/'
+2026-01-02T14:15:14.368+01:00  INFO 950181 --- [datashare-backend] [           main] c.d.backend.DatashareBackendApplication  : Started DatashareBackendApplication in 4.129 seconds (process running for 4.401)
+2026-01-02T14:15:28.454+01:00  INFO 950181 --- [datashare-backend] [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-01-02T14:15:28.455+01:00  INFO 950181 --- [datashare-backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-01-02T14:15:28.458+01:00  INFO 950181 --- [datashare-backend] [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2026-01-02T14:15:28.480+01:00  INFO 950181 --- [datashare-backend] [nio-8080-exec-1] c.d.b.security.jwt.AuthTokenFilter       : DEBUG: Incoming Request URI: /api/auth/login
+2026-01-02T14:15:28.578+01:00  INFO 950181 --- [datashare-backend] [nio-8080-exec-1] c.d.backend.controllers.AuthController   : DEBUG: Login attempt for: test@test.com
+DEBUG: Found user in DB: test@test.com
+DEBUG: Stored Hash: $2a$10$Nj0cUjjdt46zoI3Oh3gUhuyDnAfVWc8aSgFWDxXaI33kyzFWAveqS
+2026-01-02T14:17:49.143+01:00  INFO 950181 --- [datashare-backend] [nio-8080-exec-3] c.d.b.security.jwt.AuthTokenFilter       : DEBUG: Incoming Request URI: /api/auth/login
+2026-01-02T14:17:49.147+01:00  INFO 950181 --- [datashare-backend] [nio-8080-exec-3] c.d.backend.controllers.AuthController   : DEBUG: Login attempt for: test@test.com
+DEBUG: Found user in DB: test@test.com
+DEBUG: Stored Hash: $2a$10$Nj0cUjjdt46zoI3Oh3gUhuyDnAfVWc8aSgFWDxXaI33kyzFWAveqS
+2026-01-02T14:17:49.281+01:00  INFO 950181 --- [datashare-backend] [nio-8080-exec-5] c.d.b.security.jwt.AuthTokenFilter       : DEBUG: Incoming Request URI: /api/files
+DEBUG: Found user in DB: test@test.com
+DEBUG: Stored Hash: $2a$10$Nj0cUjjdt46zoI3Oh3gUhuyDnAfVWc8aSgFWDxXaI33kyzFWAveqS
+FileController: getListFiles called for user test@test.com. Found 0 files.
+2026-01-02T14:18:17.386+01:00  INFO 950181 --- [datashare-backend] [nio-8080-exec-7] c.d.b.security.jwt.AuthTokenFilter       : DEBUG: Incoming Request URI: /api/files/upload/anonymous
+DEBUG: Found user in DB: test@test.com
+DEBUG: Stored Hash: $2a$10$Nj0cUjjdt46zoI3Oh3gUhuyDnAfVWc8aSgFWDxXaI33kyzFWAveqS
+2026-01-02T14:18:31.637+01:00  INFO 950181 --- [datashare-backend] [nio-8080-exec-9] c.d.b.security.jwt.AuthTokenFilter       : DEBUG: Incoming Request URI: /api/files
+DEBUG: Found user in DB: test@test.com
+DEBUG: Stored Hash: $2a$10$Nj0cUjjdt46zoI3Oh3gUhuyDnAfVWc8aSgFWDxXaI33kyzFWAveqS
+FileController: getListFiles called for user test@test.com. Found 0 files.
+2026-01-02T14:21:55.224+01:00  INFO 950181 --- [datashare-backend] [nio-8080-exec-2] c.d.b.security.jwt.AuthTokenFilter       : DEBUG: Incoming Request URI: /api/files
+DEBUG: Found user in DB: test@test.com
+DEBUG: Stored Hash: $2a$10$Nj0cUjjdt46zoI3Oh3gUhuyDnAfVWc8aSgFWDxXaI33kyzFWAveqS
+FileController: getListFiles called for user test@test.com. Found 0 files.
+2026-01-02T14:25:57.269+01:00  INFO 950181 --- [datashare-backend] [nio-8080-exec-5] c.d.b.security.jwt.AuthTokenFilter       : DEBUG: Incoming Request URI: /api/files/upload
+DEBUG: Found user in DB: test@test.com
+DEBUG: Stored Hash: $2a$10$Nj0cUjjdt46zoI3Oh3gUhuyDnAfVWc8aSgFWDxXaI33kyzFWAveqS
+2026-01-02T14:26:02.220+01:00  INFO 950181 --- [datashare-backend] [nio-8080-exec-7] c.d.b.security.jwt.AuthTokenFilter       : DEBUG: Incoming Request URI: /api/files
+DEBUG: Found user in DB: test@test.com
+DEBUG: Stored Hash: $2a$10$Nj0cUjjdt46zoI3Oh3gUhuyDnAfVWc8aSgFWDxXaI33kyzFWAveqS
+FileController: getListFiles called for user test@test.com. Found 1 files.
+2026-01-02T14:26:09.894+01:00  INFO 950181 --- [datashare-backend] [nio-8080-exec-9] c.d.b.security.jwt.AuthTokenFilter       : DEBUG: Incoming Request URI: /api/files/2/tags
+DEBUG: Found user in DB: test@test.com
+DEBUG: Stored Hash: $2a$10$Nj0cUjjdt46zoI3Oh3gUhuyDnAfVWc8aSgFWDxXaI33kyzFWAveqS
+2026-01-02T14:26:11.361+01:00  INFO 950181 --- [datashare-backend] [io-8080-exec-10] c.d.b.security.jwt.AuthTokenFilter       : DEBUG: Incoming Request URI: /api/files/2/tags
+DEBUG: Found user in DB: test@test.com
+DEBUG: Stored Hash: $2a$10$Nj0cUjjdt46zoI3Oh3gUhuyDnAfVWc8aSgFWDxXaI33kyzFWAveqS
+2026-01-02T14:26:13.152+01:00  INFO 950181 --- [datashare-backend] [nio-8080-exec-1] c.d.b.security.jwt.AuthTokenFilter       : DEBUG: Incoming Request URI: /api/files/2/tags
+DEBUG: Found user in DB: test@test.com
+DEBUG: Stored Hash: $2a$10$Nj0cUjjdt46zoI3Oh3gUhuyDnAfVWc8aSgFWDxXaI33kyzFWAveqS
+2026-01-02T14:26:21.146+01:00  INFO 950181 --- [datashare-backend] [nio-8080-exec-3] c.d.b.security.jwt.AuthTokenFilter       : DEBUG: Incoming Request URI: /api/files/2/tags/Wesh
+DEBUG: Found user in DB: test@test.com
+DEBUG: Stored Hash: $2a$10$Nj0cUjjdt46zoI3Oh3gUhuyDnAfVWc8aSgFWDxXaI33kyzFWAveqS
+2026-01-02T14:26:22.459+01:00  INFO 950181 --- [datashare-backend] [nio-8080-exec-5] c.d.b.security.jwt.AuthTokenFilter       : DEBUG: Incoming Request URI: /api/files/2/tags/Caca
+DEBUG: Found user in DB: test@test.com
+DEBUG: Stored Hash: $2a$10$Nj0cUjjdt46zoI3Oh3gUhuyDnAfVWc8aSgFWDxXaI33kyzFWAveqS
+2026-01-02T14:36:48.080+01:00  INFO 950181 --- [datashare-backend] [nio-8080-exec-8] c.d.b.security.jwt.AuthTokenFilter       : DEBUG: Incoming Request URI: /api/files
+DEBUG: Found user in DB: test@test.com
+DEBUG: Stored Hash: $2a$10$Nj0cUjjdt46zoI3Oh3gUhuyDnAfVWc8aSgFWDxXaI33kyzFWAveqS
+FileController: getListFiles called for user test@test.com. Found 1 files.
+2026-01-02T14:36:50.216+01:00  INFO 950181 --- [datashare-backend] [nio-8080-exec-9] c.d.b.security.jwt.AuthTokenFilter       : DEBUG: Incoming Request URI: /api/files
+DEBUG: Found user in DB: test@test.com
+DEBUG: Stored Hash: $2a$10$Nj0cUjjdt46zoI3Oh3gUhuyDnAfVWc8aSgFWDxXaI33kyzFWAveqS
+FileController: getListFiles called for user test@test.com. Found 1 files.
+2026-01-02T14:38:56.486+01:00  INFO 950181 --- [datashare-backend] [nio-8080-exec-2] c.d.b.security.jwt.AuthTokenFilter       : DEBUG: Incoming Request URI: /api/files/upload
+DEBUG: Found user in DB: test@test.com
+DEBUG: Stored Hash: $2a$10$Nj0cUjjdt46zoI3Oh3gUhuyDnAfVWc8aSgFWDxXaI33kyzFWAveqS
+2026-01-02T14:39:00.969+01:00  INFO 950181 --- [datashare-backend] [nio-8080-exec-4] c.d.b.security.jwt.AuthTokenFilter       : DEBUG: Incoming Request URI: /api/files
+DEBUG: Found user in DB: test@test.com
+DEBUG: Stored Hash: $2a$10$Nj0cUjjdt46zoI3Oh3gUhuyDnAfVWc8aSgFWDxXaI33kyzFWAveqS
+FileController: getListFiles called for user test@test.com. Found 2 files.
+2026-01-02T14:39:04.932+01:00  INFO 950181 --- [datashare-backend] [nio-8080-exec-6] c.d.b.security.jwt.AuthTokenFilter       : DEBUG: Incoming Request URI: /api/files/3/tags
+DEBUG: Found user in DB: test@test.com
+DEBUG: Stored Hash: $2a$10$Nj0cUjjdt46zoI3Oh3gUhuyDnAfVWc8aSgFWDxXaI33kyzFWAveqS
+2026-01-02T14:39:06.494+01:00  INFO 950181 --- [datashare-backend] [nio-8080-exec-8] c.d.b.security.jwt.AuthTokenFilter       : DEBUG: Incoming Request URI: /api/files/2/tags/Test
+DEBUG: Found user in DB: test@test.com
+DEBUG: Stored Hash: $2a$10$Nj0cUjjdt46zoI3Oh3gUhuyDnAfVWc8aSgFWDxXaI33kyzFWAveqS
+2026-01-02T14:39:09.786+01:00  INFO 950181 --- [datashare-backend] [io-8080-exec-10] c.d.b.security.jwt.AuthTokenFilter       : DEBUG: Incoming Request URI: /api/files/2/tags
+DEBUG: Found user in DB: test@test.com
+DEBUG: Stored Hash: $2a$10$Nj0cUjjdt46zoI3Oh3gUhuyDnAfVWc8aSgFWDxXaI33kyzFWAveqS

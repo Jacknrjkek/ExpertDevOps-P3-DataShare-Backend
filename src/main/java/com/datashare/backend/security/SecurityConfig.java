@@ -19,6 +19,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.intercept.AuthorizationFilter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
@@ -104,7 +105,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         // Autoriser Login et Register sans Token
-                        .requestMatchers("/api/auth/**", "/api/test/**").permitAll()
+                        .requestMatchers("/api/auth/login", "/api/auth/register", "/api/files/upload/anonymous")
+                        .permitAll()
                         // Autoriser les requêtes OPTIONS (Pre-flight CORS)
                         .requestMatchers(org.springframework.http.HttpMethod.OPTIONS, "/**").permitAll()
                         // Tout le reste nécessite Authentification
@@ -113,8 +115,9 @@ public class SecurityConfig {
         // Configure le provider d'auth
         http.authenticationProvider(authenticationProvider());
 
-        // Ajoute le filtre JWT avant le filtre UsernamePassword
-        http.addFilterBefore(authTokenFilter, UsernamePasswordAuthenticationFilter.class);
+        // Ajoute le filtre JWT avant le filtre d'autorisation de Spring Security
+        // (Pour s'assurer qu'il est exécuté même si formLogin est désactivé)
+        http.addFilterBefore(authTokenFilter, AuthorizationFilter.class);
 
         return http.build();
     }

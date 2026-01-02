@@ -51,6 +51,7 @@ public class AuthTokenFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
         try {
+            logger.info("DEBUG: Incoming Request URI: {}", request.getRequestURI());
             // Lecture du token depuis la requête
             String jwt = parseJwt(request);
 

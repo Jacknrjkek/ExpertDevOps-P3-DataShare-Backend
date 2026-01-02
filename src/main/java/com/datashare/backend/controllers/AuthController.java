@@ -24,6 +24,10 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 
+// === Logging ===
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Controller responsable de l'authentification et de l'inscription des
  * utilisateurs.
@@ -36,102 +40,112 @@ import org.springframework.http.HttpStatus;
 @RequestMapping("/api/auth")
 public class AuthController {
 
-    /**
-     * AuthenticationManager :
-     * composant Spring Security chargé de vérifier les identifiants
-     * (email + mot de passe).
-     */
-    @Autowired
-    AuthenticationManager authenticationManager;
+        private static final Logger logger = LoggerFactory.getLogger(AuthController.class);
 
-    /**
-     * Repository JPA pour accéder aux utilisateurs stockés en base de données.
-     */
-    @Autowired
-    AppUserRepository userRepository;
+        /**
+         * AuthenticationManager :
+         * composant Spring Security chargé de vérifier les identifiants
+         * (email + mot de passe).
+         */
+        @Autowired
+        AuthenticationManager authenticationManager;
 
-    /**
-     * PasswordEncoder :
-     * permet de hasher les mots de passe avant stockage
-     * (ex : BCrypt).
-     */
-    @Autowired
-    PasswordEncoder encoder;
+        /**
+         * Repository JPA pour accéder aux utilisateurs stockés en base de données.
+         */
+        @Autowired
+        AppUserRepository userRepository;
 
-    /**
-     * Utilitaire JWT :
-     * génère et valide les tokens JWT.
-     */
-    @Autowired
-    JwtUtils jwtUtils;
+        /**
+         * PasswordEncoder :
+         * permet de hasher les mots de passe avant stockage
+         * (ex : BCrypt).
+         */
+        @Autowired
+        PasswordEncoder encoder;
 
-    /**
-     * Endpoint de connexion utilisateur.
-     *
-     * @param loginRequest contient l'email et le mot de passe
-     * @return JWT + informations utilisateur si authentification réussie
-     */
-    @PostMapping("/login")
-    public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
+        /**
+         * Utilitaire JWT :
+         * génère et valide les tokens JWT.
+         */
+        @Autowired
+        JwtUtils jwtUtils;
 
-        // Authentifie l'utilisateur via Spring Security
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        loginRequest.getEmail(),
-                        loginRequest.getPassword()));
+        /**
+         * Endpoint de connexion utilisateur.
+         *
+         * @param loginRequest contient l'email et le mot de passe
+         * @return JWT + informations utilisateur si authentification réussie
+         */
+        @PostMapping("/login")
+        public ResponseEntity<?> authenticateUser(@RequestBody LoginRequest loginRequest) {
 
-        // Stocke l'authentification dans le contexte de sécurité
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+                // Authentifie l'utilisateur via Spring Security
+                logger.info("DEBUG: Login attempt for: {}", loginRequest.getEmail());
+                Authentication authentication;
+                try {
+                        authentication = authenticationManager.authenticate(
+                                        new UsernamePasswordAuthenticationToken(
+                                                        loginRequest.getEmail(),
+                                                        loginRequest.getPassword()));
+                } catch (Exception e) {
+                        logger.error("DEBUG: Authentication failed for {}: {}", loginRequest.getEmail(),
+                                        e.getMessage());
+                        throw e;
+                }
 
-        // Génère un token JWT à partir de l'authentification
-        String jwt = jwtUtils.generateJwtToken(authentication);
+                // Stocke l'authentification dans le contexte de sécurité
+                SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        // Récupère les détails de l'utilisateur authentifié
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+                // Génère un token JWT à partir de l'authentification
+                String jwt = jwtUtils.generateJwtToken(authentication);
 
-        // Récupère l'utilisateur complet depuis la base
-        AppUser user = userRepository
-                .findByEmail(userDetails.getUsername())
-                .orElseThrow();
+                // Récupère les détails de l'utilisateur authentifié
+                UserDetails userDetails = (UserDetails) authentication.getPrincipal();
 
-        // Retourne le token JWT + infos utiles côté front
-        return ResponseEntity.ok(
-                new JwtResponse(
-                        jwt,
-                        user.getId(),
-                        user.getEmail()));
-    }
+                // Récupère l'utilisateur complet depuis la base
+                AppUser user = userRepository
+                                .findByEmail(userDetails.getUsername())
+                                .orElseThrow();
 
-    /**
-     * Endpoint d'inscription utilisateur.
-     *
-     * @param signUpRequest contient email et mot de passe
-     * @return message de confirmation ou erreur
-     */
-    @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
-
-        // Vérifie si l'email existe déjà en base
-        if (userRepository.existsByEmail(signUpRequest.getEmail())) {
-            return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Email is already in use!"));
+                // Retourne le token JWT + infos utiles côté front
+                return ResponseEntity.ok(
+                                new JwtResponse(
+                                                jwt,
+                                                user.getId(),
+                                                user.getEmail()));
         }
 
-        // Création du nouvel utilisateur
-        AppUser user = new AppUser();
-        user.setEmail(signUpRequest.getEmail());
+        /**
+         * Endpoint d'inscription utilisateur.
+         *
+         * @param signUpRequest contient email et mot de passe
+         * @return message de confirmation ou erreur
+         */
+        @PostMapping("/register")
+        public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signUpRequest) {
 
-        // Hash du mot de passe avant stockage (sécurité)
-        user.setPasswordHash(
-                encoder.encode(signUpRequest.getPassword()));
+                // Vérifie si l'email existe déjà en base
+                if (userRepository.existsByEmail(signUpRequest.getEmail())) {
+                        return ResponseEntity
+                                        .badRequest()
+                                        .body(new MessageResponse("Erreur : Cet email est déjà utilisé !"));
+                }
 
-        // Sauvegarde en base de données
-        userRepository.save(user);
+                // Création du nouvel utilisateur
+                AppUser user = new AppUser();
+                user.setEmail(signUpRequest.getEmail());
 
-        // Retourne un statut HTTP 201 (Created)
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(new MessageResponse("User registered successfully!"));
-    }
+                // Hash du mot de passe avant stockage (sécurité)
+                user.setPasswordHash(
+                                encoder.encode(signUpRequest.getPassword()));
+
+                // Sauvegarde en base de données
+                userRepository.save(user);
+
+                // Retourne un statut HTTP 201 (Created)
+                return ResponseEntity
+                                .status(HttpStatus.CREATED)
+                                .body(new MessageResponse("User registered successfully!"));
+        }
 }

@@ -68,7 +68,7 @@ public class FileController {
             "exe", "msi", "bat", "cmd", "ps1", "vbs", "js", "jar", "com", "scr", "dll", "sys");
 
     /**
-     * Endpoint d'upload de fichier.
+     * Endpoint d'upload de fichier (Authentifié).
      *
      * @param file           le fichier binaire reçu (Multipart)
      * @param expirationTime durée de validité optionnelle en jours
@@ -78,6 +78,33 @@ public class FileController {
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file,
             @RequestParam(value = "expirationTime", required = false) Integer expirationTime) {
 
+        try {
+            // Récupère l'utilisateur connecté
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+            AppUser user = userRepository.findByEmail(userDetails.getUsername())
+                    .orElseThrow(() -> new RuntimeException("User not found"));
+
+            return processFileUpload(file, expirationTime, user);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new MessageResponse(
+                    "Erreur lors de l'upload authentifié : " + e.getMessage()));
+        }
+    }
+
+    /**
+     * Endpoint d'upload de fichier (Anonyme - US07).
+     */
+    @PostMapping("/upload/anonymous")
+    public ResponseEntity<?> uploadFileAnonymous(@RequestParam("file") MultipartFile file,
+            @RequestParam(value = "expirationTime", required = false) Integer expirationTime) {
+        return processFileUpload(file, expirationTime, null);
+    }
+
+    /**
+     * Méthode commune pour traiter l'upload.
+     */
+    private ResponseEntity<?> processFileUpload(MultipartFile file, Integer expirationTime, AppUser owner) {
         // 1. Vérifie l'extension du fichier (Sécurité)
         String originalFilename = file.getOriginalFilename();
         if (originalFilename != null) {
@@ -93,23 +120,17 @@ public class FileController {
         }
 
         try {
-            // 2. Récupère l'utilisateur connecté via le contexte de sécurité
-            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-            UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            AppUser user = userRepository.findByEmail(userDetails.getUsername())
-                    .orElseThrow(() -> new RuntimeException("User not found"));
-
-            // 3. Stocke physiquement le fichier
+            // 2. Stocke physiquement le fichier
             String fileName = fileStorageService.store(file);
 
-            // 4. Crée l'entrée en base de données
+            // 3. Crée l'entrée en base de données
             File fileEntity = new File();
             fileEntity.setOriginalName(file.getOriginalFilename());
             fileEntity.setStoragePath(fileName);
             fileEntity.setSize(file.getSize());
-            fileEntity.setOwner(user);
+            fileEntity.setOwner(owner); // Peut être null pour anonyme
 
-            // 5. Calcule la date d'expiration (Max 7 jours)
+            // 4. Calcule la date d'expiration (Max 7 jours)
             int days = (expirationTime != null) ? Math.min(expirationTime, 7) : 7;
             if (days < 1)
                 days = 1; // Minimum 1 jour
@@ -117,17 +138,17 @@ public class FileController {
 
             fileRepository.save(fileEntity);
 
-            // 6. Crée automatiquement un lien de partage
+            // 5. Crée automatiquement un lien de partage
             Share share = new Share();
             share.setFile(fileEntity);
             share.setUniqueToken(UUID.randomUUID().toString());
             shareRepository.save(share);
 
-            // 7. Retourne la réponse succès avec les IDs
+            // 6. Retourne la réponse succès avec les IDs
             return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
                     "fileId", fileEntity.getId(),
                     "shareToken", share.getUniqueToken(),
-                    "message", "Fichier téléversé avec succès"));
+                    "message", "Fichier téléversé avec succès (" + (owner != null ? "Authentifié" : "Anonyme") + ")"));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -167,7 +188,8 @@ public class FileController {
                     dbFile.getCreatedAt(),
                     dbFile.getExpirationDate(),
                     token,
-                    downloadCount);
+                    downloadCount,
+                    dbFile.getTags());
         }).collect(Collectors.toList());
 
         return ResponseEntity.ok(fileResponses);
@@ -206,6 +228,57 @@ public class FileController {
             fileRepository.delete(file);
 
             return ResponseEntity.ok(Map.of("message", "Fichier supprimé avec succès"));
+        }).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Endpoint d'ajout de tag à un fichier.
+     */
+    @PostMapping("/{id}/tags")
+    public ResponseEntity<?> addTag(@PathVariable Long id, @RequestBody Map<String, String> payload) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        AppUser user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow();
+
+        return fileRepository.findById(id).map(file -> {
+            if (!file.getOwner().getId().equals(user.getId())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
+            String tag = payload.get("tag");
+            if (tag == null || tag.trim().isEmpty()) {
+                return ResponseEntity.badRequest().body(new MessageResponse("Tag cannot be empty"));
+            }
+
+            if (tag.length() > 30) {
+                return ResponseEntity.badRequest().body(new MessageResponse("Tag too long (max 30 chars)"));
+            }
+
+            file.getTags().add(tag.trim());
+            fileRepository.save(file);
+
+            return ResponseEntity.ok(new MessageResponse("Tag added successfully"));
+        }).orElseGet(() -> ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Endpoint de suppression de tag d'un fichier.
+     */
+    @DeleteMapping("/{id}/tags/{tag}")
+    public ResponseEntity<?> removeTag(@PathVariable Long id, @PathVariable String tag) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        AppUser user = userRepository.findByEmail(userDetails.getUsername()).orElseThrow();
+
+        return fileRepository.findById(id).map(file -> {
+            if (!file.getOwner().getId().equals(user.getId())) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+            }
+
+            file.getTags().remove(tag);
+            fileRepository.save(file);
+
+            return ResponseEntity.ok(new MessageResponse("Tag removed successfully"));
         }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 }
