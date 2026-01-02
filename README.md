@@ -17,7 +17,7 @@ DataShare est une application web sécurisée de partage de fichiers, développ�
 ## Documentation Technique
 *   **[Documentation Base de Données (MLD)](./DATABASE.md)** : Schéma relationnel et description des tables.
 *   **[Documentation API REST](./API.md)** : Liste des endpoints, méthodes et sécurité.
-*   **[Spécification OpenAPI (Swagger)](./openapi.yaml)** : Description technique standardisée de l'API.
+*   **[Documentation API (SwaggerHub)](https://app.swaggerhub.com/apis-docs/uha-d8f/DataShareAPI/1.0.0)** : Documentation interactive en ligne.
 
 
 *   **[Choix Techniques](./CHOIX_TECHNIQUES.md)** : Justification de la stack (Java/Angular), BDD et outils.
