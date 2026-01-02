@@ -10,10 +10,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * Service de tâche planifiée (CRON job) pour le nettoyage automatique.
- * Supprime les fichiers dont la date d'expiration est dépassée.
- */
 @Service
 public class FileCleanupService {
 
@@ -23,28 +19,35 @@ public class FileCleanupService {
     @Autowired
     private FileStorageService fileStorageService;
 
-    /**
-     * Exécuté toutes les heures (3600000 ms).
-     * Vérifie et supprime les fichiers expirés de la DB et du disque.
-     */
-    @Scheduled(fixedRate = 3600000)
+    // Run every day at midnight
+    @Scheduled(cron = "0 0 0 * * ?")
     @Transactional
-    public void deleteExpiredFiles() {
+    public void cleanupExpiredFiles() {
+        System.out.println("Running scheduled file cleanup task at " + LocalDateTime.now());
+
         LocalDateTime now = LocalDateTime.now();
-        // Recherche des fichiers expirés
         List<File> expiredFiles = fileRepository.findByExpirationDateBefore(now);
+
+        if (expiredFiles.isEmpty()) {
+            System.out.println("No expired files to clean up.");
+            return;
+        }
+
+        System.out.println("Found " + expiredFiles.size() + " expired files. Deleting...");
 
         for (File file : expiredFiles) {
             try {
-                // 1. Suppression physique du fichier
+                // Delete physical file
                 fileStorageService.delete(file.getStoragePath());
 
-                // 2. Suppression de l'entrée en base de données
+                // Entity deletion will be handled by repository deletion loop or batch
+                // Here we can just delete from repository, or collect IDs and delete batch.
+                // Simple approach: delete individually to ensure physical delete happens.
                 fileRepository.delete(file);
 
                 System.out.println("Deleted expired file: " + file.getOriginalName() + " (ID: " + file.getId() + ")");
             } catch (Exception e) {
-                System.err.println("Error deleting expired file ID " + file.getId() + ": " + e.getMessage());
+                System.err.println("Failed to delete file " + file.getId() + ": " + e.getMessage());
             }
         }
     }

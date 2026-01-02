@@ -7,6 +7,7 @@ import com.datashare.backend.payload.response.JwtResponse;
 import com.datashare.backend.payload.response.MessageResponse;
 import com.datashare.backend.repository.AppUserRepository;
 import com.datashare.backend.security.jwt.JwtUtils;
+import com.datashare.backend.TestConstants;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -57,7 +58,7 @@ public class AuthControllerTest {
     public void testRegisterUser_EmailExists() {
         SignupRequest request = new SignupRequest();
         request.setEmail("existing@test.com");
-        request.setPassword("password123");
+        request.setPassword(TestConstants.TEST_USER_PASSWORD);
 
         when(userRepository.existsByEmail("existing@test.com")).thenReturn(true);
 
@@ -65,7 +66,7 @@ public class AuthControllerTest {
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         MessageResponse body = (MessageResponse) response.getBody();
-        assertEquals("Error: Email is already in use!", body.getMessage());
+        assertEquals("Erreur : Cet email est déjà utilisé !", body.getMessage());
     }
 
     /**
@@ -75,10 +76,10 @@ public class AuthControllerTest {
     public void testRegisterUser_Success() {
         SignupRequest request = new SignupRequest();
         request.setEmail("new@test.com");
-        request.setPassword("password123");
+        request.setPassword(TestConstants.TEST_USER_PASSWORD);
 
         when(userRepository.existsByEmail("new@test.com")).thenReturn(false);
-        when(encoder.encode("password123")).thenReturn("hashedPassword");
+        when(encoder.encode(TestConstants.TEST_USER_PASSWORD)).thenReturn("hashedPassword");
         // save returns valid entity
         when(userRepository.save(any(AppUser.class))).thenAnswer(i -> i.getArgument(0));
 

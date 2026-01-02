@@ -63,6 +63,9 @@ public class FileController {
     @Autowired
     ShareRepository shareRepository;
 
+    @Autowired
+    org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
+
     // Liste des extensions interdites pour des raisons de sécurité
     private static final java.util.List<String> FORBIDDEN_EXTENSIONS = java.util.Arrays.asList(
             "exe", "msi", "bat", "cmd", "ps1", "vbs", "js", "jar", "com", "scr", "dll", "sys");
@@ -72,11 +75,13 @@ public class FileController {
      *
      * @param file           le fichier binaire reçu (Multipart)
      * @param expirationTime durée de validité optionnelle en jours
+     * @param password       mot de passe optionnel pour protéger le fichier
      * @return statut de l'opération et token de partage généré
      */
     @PostMapping("/upload")
     public ResponseEntity<?> uploadFile(@RequestParam("file") MultipartFile file,
-            @RequestParam(value = "expirationTime", required = false) Integer expirationTime) {
+            @RequestParam(value = "expirationTime", required = false) Integer expirationTime,
+            @RequestParam(value = "password", required = false) String password) {
 
         try {
             // Récupère l'utilisateur connecté
@@ -85,7 +90,7 @@ public class FileController {
             AppUser user = userRepository.findByEmail(userDetails.getUsername())
                     .orElseThrow(() -> new RuntimeException("User not found"));
 
-            return processFileUpload(file, expirationTime, user);
+            return processFileUpload(file, expirationTime, password, user);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new MessageResponse(
                     "Erreur lors de l'upload authentifié : " + e.getMessage()));
@@ -97,14 +102,16 @@ public class FileController {
      */
     @PostMapping("/upload/anonymous")
     public ResponseEntity<?> uploadFileAnonymous(@RequestParam("file") MultipartFile file,
-            @RequestParam(value = "expirationTime", required = false) Integer expirationTime) {
-        return processFileUpload(file, expirationTime, null);
+            @RequestParam(value = "expirationTime", required = false) Integer expirationTime,
+            @RequestParam(value = "password", required = false) String password) {
+        return processFileUpload(file, expirationTime, password, null);
     }
 
     /**
      * Méthode commune pour traiter l'upload.
      */
-    private ResponseEntity<?> processFileUpload(MultipartFile file, Integer expirationTime, AppUser owner) {
+    private ResponseEntity<?> processFileUpload(MultipartFile file, Integer expirationTime, String password,
+            AppUser owner) {
         // 1. Vérifie l'extension du fichier (Sécurité)
         String originalFilename = file.getOriginalFilename();
         if (originalFilename != null) {
@@ -129,6 +136,15 @@ public class FileController {
             fileEntity.setStoragePath(fileName);
             fileEntity.setSize(file.getSize());
             fileEntity.setOwner(owner); // Peut être null pour anonyme
+
+            // Validation et hashage du mot de passe
+            if (password != null && !password.isBlank()) {
+                if (password.length() < 6) {
+                    return ResponseEntity.badRequest()
+                            .body(new MessageResponse("Le mot de passe doit contenir au moins 6 caractères."));
+                }
+                fileEntity.setPasswordHash(passwordEncoder.encode(password));
+            }
 
             // 4. Calcule la date d'expiration (Max 7 jours)
             int days = (expirationTime != null) ? Math.min(expirationTime, 7) : 7;

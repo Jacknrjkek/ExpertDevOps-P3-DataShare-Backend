@@ -29,7 +29,7 @@ public class JwtUtilsTest {
     @Mock
     private UserDetails userDetails;
 
-    private final String jwtSecret = "ThisIsASecretKeyForTestThatIsLongEnoughToSatisfyHS256Requirements";
+    private final String jwtSecret = com.datashare.backend.TestConstants.TEST_JWT_SECRET;
     private final int jwtExpirationMs = 3600000; // 1 hour
 
     @BeforeEach

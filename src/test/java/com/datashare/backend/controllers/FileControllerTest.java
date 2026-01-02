@@ -6,6 +6,7 @@ import com.datashare.backend.repository.AppUserRepository;
 import com.datashare.backend.repository.FileRepository;
 import com.datashare.backend.repository.ShareRepository;
 import com.datashare.backend.services.FileStorageService;
+import com.datashare.backend.TestConstants;
 import com.datashare.backend.payload.response.MessageResponse;
 
 import org.junit.jupiter.api.BeforeEach;
@@ -32,6 +33,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.verify;
+import static org.mockito.ArgumentMatchers.argThat;
 
 /**
  * Tests Unitaires pour FileController.
@@ -52,6 +55,9 @@ public class FileControllerTest {
 
     @Mock
     private ShareRepository shareRepository;
+
+    @Mock
+    private org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
     @InjectMocks
     private FileController fileController;
@@ -92,7 +98,7 @@ public class FileControllerTest {
         mockUser.setEmail("test@test.com");
         lenient().when(userRepository.findByEmail("test@test.com")).thenReturn(Optional.of(mockUser));
 
-        ResponseEntity<?> response = fileController.uploadFile(file, null);
+        ResponseEntity<?> response = fileController.uploadFile(file, null, null);
 
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         MessageResponse body = (MessageResponse) response.getBody();
@@ -129,7 +135,7 @@ public class FileControllerTest {
             return f;
         });
 
-        ResponseEntity<?> response = fileController.uploadFile(file, 7);
+        ResponseEntity<?> response = fileController.uploadFile(file, 7, TestConstants.TEST_FILE_PASSWORD);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         @SuppressWarnings("unchecked")
@@ -238,7 +244,7 @@ public class FileControllerTest {
             return f;
         });
 
-        ResponseEntity<?> response = fileController.uploadFileAnonymous(file, 2);
+        ResponseEntity<?> response = fileController.uploadFileAnonymous(file, 2, null);
 
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
         @SuppressWarnings("unchecked")
@@ -297,5 +303,55 @@ public class FileControllerTest {
 
         assertEquals(HttpStatus.OK, response.getStatusCode());
         assertEquals(0, file.getTags().size());
+    }
+
+    /**
+     * Teste l'expiration (US10) : Calcul automatique à 7 jours.
+     */
+    @Test
+    public void testExpirationDefaultLogic() throws Exception {
+        MockMultipartFile file = new MockMultipartFile("file", "test.txt", "text/plain", "content".getBytes());
+
+        lenient().when(securityContext.getAuthentication()).thenReturn(authentication);
+        lenient().when(authentication.getPrincipal()).thenReturn(userDetails);
+        lenient().when(userDetails.getUsername()).thenReturn("test@test.com");
+        AppUser mockUser = new AppUser();
+        mockUser.setId(1L);
+        mockUser.setEmail("test@test.com");
+        when(userRepository.findByEmail("test@test.com")).thenReturn(Optional.of(mockUser));
+
+        when(fileStorageService.store(any())).thenReturn("path");
+        when(fileRepository.save(any(File.class))).thenAnswer(i -> i.getArgument(0));
+
+        // Test default (null expiration)
+        fileController.uploadFile(file, null, null);
+
+        verify(fileRepository).save(argThat(f -> f.getExpirationDate().isAfter(LocalDateTime.now().plusDays(6)) &&
+                f.getExpirationDate().isBefore(LocalDateTime.now().plusDays(8))));
+    }
+
+    /**
+     * Teste l'expiration (US10) : Respect du paramètre utilisateur.
+     */
+    @Test
+    public void testExpirationCustomLogic() throws Exception {
+        MockMultipartFile file = new MockMultipartFile("file", "test.txt", "text/plain", "content".getBytes());
+
+        lenient().when(securityContext.getAuthentication()).thenReturn(authentication);
+        lenient().when(authentication.getPrincipal()).thenReturn(userDetails);
+        lenient().when(userDetails.getUsername()).thenReturn("test@test.com");
+        AppUser mockUser = new AppUser();
+        mockUser.setId(1L);
+        mockUser.setEmail("test@test.com");
+        when(userRepository.findByEmail("test@test.com")).thenReturn(Optional.of(mockUser));
+
+        when(fileStorageService.store(any())).thenReturn("path");
+        when(fileRepository.save(any(File.class))).thenAnswer(i -> i.getArgument(0));
+
+        // Test custom (3 days)
+        fileController.uploadFile(file, 3, null);
+
+        verify(fileRepository).save(argThat(f -> f.getExpirationDate().isAfter(LocalDateTime.now().plusDays(2)) &&
+                f.getExpirationDate().isBefore(LocalDateTime.now().plusDays(4))));
     }
 }
