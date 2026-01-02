@@ -44,6 +44,10 @@ public class File {
     @OneToMany(mappedBy = "file", cascade = CascadeType.ALL, orphanRemoval = true)
     private java.util.List<Share> shares = new java.util.ArrayList<>();
 
+    @com.fasterxml.jackson.annotation.JsonIgnore
+    @Column(name = "password_hash")
+    private String passwordHash;
+
     @ElementCollection
     @CollectionTable(name = "file_tags", joinColumns = @JoinColumn(name = "file_id"))
     @Column(name = "tag", length = 30)
@@ -126,5 +130,13 @@ public class File {
 
     public void setTags(java.util.Set<String> tags) {
         this.tags = tags;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 }
