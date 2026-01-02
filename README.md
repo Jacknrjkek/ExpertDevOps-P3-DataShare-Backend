@@ -14,7 +14,10 @@ DataShare est une application web sécurisée de partage de fichiers, développ�
 ![Dashboard DataShare](screenshots/dashboard.png)
 *Tableau de bord de l'application DataShare*
 
-## Fonctionnalités Principales des documents techniques requis pour la maintenance et la compréhension du projet :
+## Documentation Technique
+*   **[Documentation Base de Données (MLD)](./DATABASE.md)** : Schéma relationnel et description des tables.
+*   **[Documentation API REST](./API.md)** : Liste des endpoints, méthodes et sécurité.
+
 
 *   **[Choix Techniques](./CHOIX_TECHNIQUES.md)** : Justification de la stack (Java/Angular), BDD et outils.
 *   **[Sécurité](./SECURITY.md)** : Rapport d'audit OWASP, implémentation JWT et bonnes pratiques.
