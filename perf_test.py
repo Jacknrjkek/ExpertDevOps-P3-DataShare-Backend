@@ -6,6 +6,8 @@ import statistics
 import os
 
 URL = "http://localhost:8080/api/auth/login"
+# SECURITY: This script uses HTTP (localhost) intentionally for performance testing in a dev environment.
+
 # Payload invalide mais suffisant pour tester la réaction du serveur (401 ou 400)
 email = os.getenv("PERF_TEST_EMAIL", "perf.test@test.com")
 password = os.getenv("PERF_TEST_PASSWORD", "wrongpassword")

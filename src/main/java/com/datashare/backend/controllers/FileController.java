@@ -67,7 +67,7 @@ public class FileController {
     org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
     // Liste des extensions interdites pour des raisons de sécurité
-    private static final java.util.List<String> FORBIDDEN_EXTENSIONS = java.util.Arrays.asList(
+    private static final List<String> FORBIDDEN_EXTENSIONS = java.util.Arrays.asList(
             "exe", "msi", "bat", "cmd", "ps1", "vbs", "js", "jar", "com", "scr", "dll", "sys");
 
     /**

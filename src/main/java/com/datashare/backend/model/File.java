@@ -2,6 +2,11 @@ package com.datashare.backend.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 /**
  * Entité JPA représentant un fichier téléversé.
@@ -10,7 +15,7 @@ import java.time.LocalDateTime;
  * et gère la relation avec le propriétaire et les partages.
  */
 @Entity
-@Table(name = "file")
+@Table(name = "file_uploads")
 public class File {
 
     @Id
@@ -42,16 +47,16 @@ public class File {
 
     // Relation One-to-Many : Un fichier peut avoir plusieurs liens de partages
     @OneToMany(mappedBy = "file", cascade = CascadeType.ALL, orphanRemoval = true)
-    private java.util.List<Share> shares = new java.util.ArrayList<>();
+    private List<Share> shares = new ArrayList<>();
 
-    @com.fasterxml.jackson.annotation.JsonIgnore
+    @JsonIgnore
     @Column(name = "password_hash")
     private String passwordHash;
 
     @ElementCollection
     @CollectionTable(name = "file_tags", joinColumns = @JoinColumn(name = "file_id"))
     @Column(name = "tag", length = 30)
-    private java.util.Set<String> tags = new java.util.HashSet<>();
+    private Set<String> tags = new HashSet<>();
 
     @PrePersist
     protected void onCreate() {
@@ -116,19 +121,19 @@ public class File {
         this.owner = owner;
     }
 
-    public java.util.List<Share> getShares() {
+    public List<Share> getShares() {
         return shares;
     }
 
-    public void setShares(java.util.List<Share> shares) {
+    public void setShares(List<Share> shares) {
         this.shares = shares;
     }
 
-    public java.util.Set<String> getTags() {
+    public Set<String> getTags() {
         return tags;
     }
 
-    public void setTags(java.util.Set<String> tags) {
+    public void setTags(Set<String> tags) {
         this.tags = tags;
     }
 

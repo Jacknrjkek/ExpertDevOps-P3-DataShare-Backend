@@ -25,7 +25,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 /**
  * Configuration centrale de la sécurité de l'application (Spring Security).
  *
- * - Désactive CSRF (inutile pour API REST Stateless)
+ * - Désactive CSRF (inutile pour API REST Stateless, Safe to disable)
  * - Configure la gestion de session en mode STATELESS (JWT obligatoire)
  * - Définit les règles d'accès aux URLs (PermitAll vs Authenticated)
  * - Intègre le filtre JWT avant l'authentification standard
