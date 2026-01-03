@@ -11,8 +11,8 @@ DataShare est une application web sécurisée de partage de fichiers, développ�
 
 ## [Documentation des User Stories](docs/US.md)
 
-![Dashboard DataShare](docs/screenshots/dashboard.png)
-*Tableau de bord de l'application DataShare*
+![Page d'accueil / Home](docs/screenshots/dashboard.png)
+*Page d'accueil / Home*
 
 ## Documentation Technique
 *   **[Documentation Base de Données (MLD)](docs/DATABASE.md)** : Schéma relationnel et description des tables.
