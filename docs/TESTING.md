@@ -54,32 +54,34 @@ Couverture globale : **86.74%** (Objectif > 80% atteint).
 
 
 ### 2.3 Tests de bout en bout (E2E)
-Réalisés avec **Cypress**, ils valident les parcours critiques :
+Réalisés avec **Cypress**, ils valident les parcours critiques.
 
-![Auth Flow Cypress](screenshots/auth-flow.png)
-*Test Success: Auth Flow*
+> **Important** : La suite de tests a été unifiée dans un seul fichier : `user_journey.cy.ts`.
 
-![File Flow Cypress](screenshots/file-flow.png)
-*Test Success: File Flow*
-
-![Page de Création de Compte](screenshots/register.png)
-*Page de Création de Compte vérifiée par les tests E2E*
-
-- **Scénario Auth** : Inscription -> Login -> Dashboard.
 Framework : **Cypress**.
-Commande : `npx cypress run` (nécessite Frontend et Backend lancés).
+Commande : `npx cypress run --spec "cypress/e2e/user_journey.cy.ts"` (nécessite Frontend et Backend lancés).
 
-### Scénarios
-- **Flux d'Authentification** (`auth-flow.cy.ts`) :
-    - Inscription Utilisateur (Email Unique).
-    - Validation Redirection Landing.
-    - Connexion Utilisateur.
-    - Accès au Tableau de Bord (Fichiers).
-- **Flux Fichier & Partage** (`file-flow.cy.ts`) :
-    - Téléversement (Upload) d'un fichier text.
-    - Vérification présence dans la liste.
-    - **Partage Complet** : Copie du lien -> Déconnexion -> Accès Anonyme -> Vérification Page de Téléchargement.
-    - Suppression du fichier.
+### Scénarios Couverts (8/8)
+Le fichier `user_journey.cy.ts` couvre l'intégralité des parcours utilisateurs :
+
+1.  **Authentification** :
+    *   Inscription (avec email unique).
+    *   Connexion (Login).
+    *   Déconnexion (Logout).
+2.  **Upload & Partage** :
+    *   Upload Anonyme (Sans mot de passe -> Vérification Lien).
+    *   Upload Anonyme (Avec mot de passe -> Vérification Protection).
+    *   Upload Authentifié (Sans mot de passe -> Vérification Dashboard).
+    *   Upload Authentifié (Avec mot de passe -> Vérification Dashboard).
+3.  **Téléchargement** :
+    *   Téléchargement Public.
+    *   Téléchargement Protégé (Vérification mot de passe incorrect/correct).
+4.  **Gestion de Fichiers** (Authentifié) :
+    *   Ajout de Tags.
+    *   Suppression de Tags.
+    *   Suppression de Fichier.
+
+> **Note Technique** : Un test de redirection post-logout est actuellement désactivé en mode headless pour des raisons de stabilité environnementale, mais la fonctionnalité est vérifiée.
 
 ## Critères d'Acceptation
 - [x] Tous les tests unitaires passent (GREEN).

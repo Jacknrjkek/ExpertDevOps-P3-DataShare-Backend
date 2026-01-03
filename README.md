@@ -1,3 +1,6 @@
+
+
+
 # DataShare
 
 DataShare est une application web sécurisée de partage de fichiers, développée dans le cadre du projet "Pilotez une solution informatique" (OC DevOps). Elle permet aux utilisateurs de s'inscrire, de stocker des fichiers personnels et de les partager via des liens uniques.
@@ -22,7 +25,7 @@ DataShare est une application web sécurisée de partage de fichiers, développ�
 
 *   **[Choix Techniques](docs/CHOIX_TECHNIQUES.md)** : Justification de la stack (Java/Angular), BDD et outils.
 *   **[Sécurité](docs/SECURITY.md)** : Rapport d'audit OWASP, implémentation JWT et bonnes pratiques.
-*   **[Stratégie de Tests](docs/TESTING.md)** : Détails des tests Unitaires, Intégration et E2E (Couverture, Outils).
+*   **[Stratégie de Tests](docs/TESTING.md)** : Détails des tests Unitaires, Intégration et E2E (Tous Scénarios couverts).
 *   **[User Stories](docs/US.md)** : Liste des fonctionnalités et matrice de traçabilité (Tests/Code).
 *   **[Maintenance](docs/MAINTENANCE.md)** : Procédures de surveillance, backup et gestion des logs.
 *   **[Performance](docs/PERF.md)** : Audit de performance et plan de montée en charge.

@@ -22,13 +22,13 @@ Ce document liste l'ensemble des exigences fonctionnelles du projet **DataShare*
 
 | User Story | Backend Controller | Frontend Component | Tests Associés |
 | :--- | :--- | :--- | :--- |
-| **US01** | `FileController.uploadFile` | `FileUploadComponent` | `FileControllerTest`, `file-flow.cy.ts` |
-| **US02** | `ShareController` | `ShareViewComponent` | `ShareControllerTest`, `file-flow.cy.ts` |
-| **US03** | `AuthController.register` | `RegisterComponent` | `AuthControllerTest`, `auth-flow.cy.ts` |
-| **US04** | `AuthController.login` | `LoginComponent` | `AuthControllerTest`, `auth-flow.cy.ts` |
-| **US05** | `FileController.listFiles` | `FileListComponent` | `FileListSpec`, `file-flow.cy.ts` |
-| **US06** | `FileController.deleteFile` | `FileListComponent` | `FileControllerTest`, `file-flow.cy.ts` |
-| **US07** | `FileController.uploadFileAnonymous` | `AnonymousUploadComponent` | `FileControllerTest`, `full-features.cy.ts` |
-| **US08** | `FileController.addTag` | `FileListComponent` | `FileControllerTest`, `full-features.cy.ts` |
-| **US09** | `FileController.uploadFile`, `ShareController` | `FileUpload`, `ShareView` | `ShareControllerTest`, `full-features.cy.ts` |
+| **US01** | `FileController.uploadFile` | `FileUploadComponent` | `FileControllerTest`, `user_journey.cy.ts` |
+| **US02** | `ShareController` | `ShareViewComponent` | `ShareControllerTest`, `user_journey.cy.ts` |
+| **US03** | `AuthController.register` | `RegisterComponent` | `AuthControllerTest`, `user_journey.cy.ts` |
+| **US04** | `AuthController.login` | `LoginComponent` | `AuthControllerTest`, `user_journey.cy.ts` |
+| **US05** | `FileController.listFiles` | `FileListComponent` | `FileListSpec`, `user_journey.cy.ts` |
+| **US06** | `FileController.deleteFile` | `FileListComponent` | `FileControllerTest`, `user_journey.cy.ts` |
+| **US07** | `FileController.uploadFileAnonymous` | `AnonymousUploadComponent` | `FileControllerTest`, `user_journey.cy.ts` |
+| **US08** | `FileController.addTag` | `FileListComponent` | `FileControllerTest`, `user_journey.cy.ts` |
+| **US09** | `FileController.uploadFile`, `ShareController` | `FileUpload`, `ShareView` | `ShareControllerTest`, `user_journey.cy.ts` |
 | **US10** | `FileCleanupService` | `FileUpload`, `AnonymousUpload` | `FileCleanupServiceTest`, `FileCleanupServiceIT` |
